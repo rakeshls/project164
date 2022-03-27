@@ -25,47 +25,36 @@ AFRAME.registerComponent("bullets", {
         });
 
         var camera = document.querySelector("#camera").object3D;
-
-        //get the camera direction as Three.js Vector
         var direction = new THREE.Vector3();
-        camera.getWorldDirection(direction);
-
-        //set the velocity and it's direction
+        camera.getWorldDirection(direction)
         bullet.setAttribute("velocity", direction.multiplyScalar(-20));
 
         var scene = document.querySelector("#scene");
-
-        //set the bullet as the dynamic entity
         bullet.setAttribute("dynamic-body", {
           shape: "sphere",
           mass: "0",
         });
         bullet.setAttribute("visible", false);
 
-        //add the collide event listener to the bullet
         bullet.addEventListener("collide", this.removeBullet);
 
         scene.appendChild(bullet);
 
-        //shooting sound
         this.shootSound();
       }
     });
   },
   removeBullet: function (e) {
     var scene = document.querySelector("#scene");
-    //bullet element
+ 
     var element = e.detail.target.el;
 
-    //element which is hit
     var elementHit = e.detail.body.el;
 
-    //Create paint splash
     var paint = document.createElement("a-entity");
     var pos = element.getAttribute("position")
     var rotate = elementHit.getAttribute("rotation")
 
-    //set the position, rotation, scale
     paint.setAttribute("position", {
       x: pos.x,
       y: pos.y,
@@ -82,7 +71,6 @@ AFRAME.registerComponent("bullets", {
       z: 2,
     });
 
-    //choose the paint splash image randomly
     var colorNum = parseInt(Math.random() * 8 + 1)
 
     paint.setAttribute("material", {
@@ -98,10 +86,8 @@ AFRAME.registerComponent("bullets", {
     });
     scene.appendChild(paint)
 
-    //remove event listener
     element.removeEventListener("collide", this.removeBullet);
-
-    //remove the bullets from the scene      
+    
     scene.removeChild(element);
   },
   shootSound: function () {
